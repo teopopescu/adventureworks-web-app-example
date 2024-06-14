@@ -1,0 +1,5 @@
+mdkdocs
+mkdocs-material
+uvicorn
+pydantic
+psycopg2-binary 
