@@ -11,3 +11,33 @@ services:
       - /Users/teopopescu/Desktop/fastapi-practice/postgresDBSamples/adventureworks/db-files:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    restart: always
+    ports:
+      - 8000:8000
+
+  redis:
+    image: redis:alpine
+    restart: always
+
+  celery:
+    build:
+      context: .
+      dockerfile: Dockerfile.celery
+    restart: always
+    depends_on:
+      - redis
+
+  flower:
+    image: mher/flower:1.2
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/0
+    restart: always
+    ports:
+      - 5555:5555
+    depends_on:
+      - celery
